@@ -19,8 +19,11 @@ sequenceDiagram
     participant S as Server
 
     Note over C,S: Step 1 — Generate Keypair
-    Note over C: generate (client_priv, client_pub)
-    Note over S: generate (server_priv, server_pub)
+    par
+        C->>C: generate (client_priv, client_pub)
+    and
+        S->>S: generate (server_priv, server_pub)
+    end
 
     Note over C,S: Step 2 — Exchange Public Keys
     S->>C: [connect (a)] server_pub
