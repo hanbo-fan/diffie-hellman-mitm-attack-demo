@@ -89,7 +89,7 @@ def main():
     print("=" * 50)
     print("Diffie-Hellman Key Exchange Demo (Server)")
     print("=" * 50)
-    choice = input("Enable PSK authentication? (y/n, default=n): ").lower()
+    choice = input("Enable PSK authentication mode? (y/n, default=n): ").lower()
     use_psk = (choice in ['y', 'yes'])
     
     if use_psk:
@@ -119,3 +119,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
