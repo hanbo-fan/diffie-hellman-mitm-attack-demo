@@ -6,6 +6,17 @@
     - MITM prevented by PSK authentication
     - MITM successful with leaked PSK
 
+## Project Structure
+```text
+├── src/
+│   ├── client.py        # ECDH Client logic (initiator)
+│   ├── server.py        # Multi-threaded ECDH Server
+│   ├── attacker.py      # MITM Proxy & Interactive Console
+│   ├── crypto_utils.py  # X25519, AES-GCM, HMAC, HKDF logic
+│   └── network_utils.py # Length-prefixed framing & socket helpers
+├── README.md            # Documentation
+└── LICENSE              # Apache License 2.0
+
 ## 1. Diffie-Hellman Key Exchange
 - This project implements an authenticated key exchange based on X25519 (Elliptic Curve Diffie-Hellman).
 - During the handshake, both parties exchange public keys and compute a shared secret:
@@ -27,7 +38,7 @@ sequenceDiagram
     Note over S: shared = server_priv · client_pub
     Note over C,S: Step 4 — Salt Transmission
     S->>C: salt (random 16 bytes)
-    Note over C,S: Step 5 & 6 — PSK Authentication (optional)
+    Note over C,S: Step 5 and 6 — PSK Authentication (optional)
     S->>C: server_tag = HMAC(PSK, "SERVER"||salt||server_pub||client_pub||shared)
     Note over C: verify server_tag
     C->>S: client_tag = HMAC(PSK, "CLIENT"||salt||client_pub||server_pub||shared)
@@ -76,7 +87,7 @@ sequenceDiagram
     S->>M: salt
     M->>C: salt
 
-    Note over C,S: Step 5 & 6 — PSK Authentication (optional)
+    Note over C,S: Step 5 and 6 — PSK Authentication (optional)
     S->>M: server_tag
     Note over M: ⚠ skip verification
     M->>S: fake_client_tag = HMAC(PSK, <br/>"CLIENT"||salt||fake_for_server_pub<br/>||server_pub||shared_server)
@@ -121,25 +132,20 @@ sequenceDiagram
 graph TD
     subgraph Internal Network 192.168.1.0/24
         C["🖥 Client<br/>192.168.1.10"]
-        S["🖥 Server<br/>192.168.1.20"]
-        M["🖥 Attacker<br/>192.168.1.30"]
+        S["🖥 Server<br/>192.168.1.20:50000"]
+        M["🖥 Attacker<br/>192.168.1.30:50000"]
     end
 
-    C -- "TCP :50000<br/>(ARP spoofed → redirected to Attacker)" --> M
-    M -- "TCP :50000<br/>(forwarded to real Server)" --> S
+    C <-- "TCP Communication" --> M
+    M <-- "TCP Communication" --> S
     M -. "ARP spoofing<br/>poison Client's ARP table" .-> C
     M -. "ARP spoofing<br/>poison Server's ARP table" .-> S
 ```
 ## 5. How to Run
-- Install dependencies
-    - pip install cryptography
-- Scenario 1: Normal DH
-    - python server.py
-    - python client.py
-- Scenario 2–4: MITM
-    - python server.py
-    - python attacker.py
-    - python client.py
+- Install dependencies: `pip install cryptography`
+- Execution Order: 
+    - For Scenario 1, start `server.py` first.
+    - For Scenarios 2–4, ensure `attacker.py` and `server.py` are running before launching `client.py` (the order between Attacker and Server does not matter).
 - Scenario 3 (Defense): Attacker uses false PSK -> Authentication fails.
 - Scenario 4 (Leaked): Attacker uses true PSK -> MITM succeeds.
 
