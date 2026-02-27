@@ -56,10 +56,10 @@ sequenceDiagram
 
     Note over C,S: Step 1 — Generate Keypair
     Note over C: generate (client_priv, client_pub)
+    Note over S: generate (server_priv, server_pub)
     Note over M: generate (fake_for_client_priv, fake_for_client_pub)
     Note over M: generate (fake_for_server_priv, fake_for_server_pub)
-    Note over S: generate (server_priv, server_pub)
-
+    
     Note over C,S: Step 2 — Intercept and Hijack Public Keys
     S->>M: server_pub
     M->>C: fake_for_client_pub
@@ -67,8 +67,10 @@ sequenceDiagram
     M->>S: fake_for_server_pub
 
     Note over C,S: Step 3 — Compute Two Shared Secrets
-    Note over M: shared secret between attacker and client<br/> = fake_for_client_priv · client_pub
-    Note over M: shared secret between attacker and server<br/> = fake_for_server_priv · server_pub
+    Note over C: shared = client_priv · fake_for_client_pub
+    Note over S: shared = server_priv · fake_for_server_pub
+    Note over M: shared_client = fake_for_client_priv · client_pub
+    Note over M: shared_server = fake_for_server_priv · server_pub
 
     Note over C,S: Step 4 — Salt Transmission
     S->>M: salt
