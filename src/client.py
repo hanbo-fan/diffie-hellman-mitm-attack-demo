@@ -13,7 +13,7 @@ def main(host: str, port: int) -> None:
     print("=" * 50)
     print("Diffie-Hellman Key Exchange Demo (Client)")
     print("=" * 50)
-    choice = input("Enable PSK authentication? (y/n, default=n): ").lower()
+    choice = input("Enable PSK authentication mode? (y/n, default=n): ").lower()
     use_psk = (choice in ['y', 'yes'])
     
     if use_psk:
@@ -101,3 +101,4 @@ def main(host: str, port: int) -> None:
 
 if __name__ == "__main__":
     main(host = server_ip, port = server_port)
+
