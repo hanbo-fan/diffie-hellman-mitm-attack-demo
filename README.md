@@ -9,7 +9,7 @@
 ## 1. Diffie-Hellman Key Exchange
 - This project implements an authenticated key exchange based on X25519 (Elliptic Curve Diffie-Hellman).
 - During the handshake, both parties exchange public keys and compute a shared secret:
-    - shared = priv_A - pub_B = priv_B - pub_A
+    - shared = priv_A * pub_B = priv_B * pub_A
 - The shared secret is then processed through HKDF-SHA256 to derive a 256-bit AES symmetric key for authenticated encryption.
 - Optional PSK-based authentication is implemented using HMAC-SHA256 to bind the handshake parameters and prevent MITM attacks.
 
