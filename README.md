@@ -113,7 +113,7 @@ sequenceDiagram
 ## 3. PSK-based Authentication Defense
 - To mitigate MITM attacks, a Pre-Shared Key (PSK) is introduced.
 - The authentication tag is computed as:
-    - HMAC(key = PSK, role || salt || my_pub || pub_peer || shared_secret)
+    - HMAC(key = PSK, role || salt || my_pub || peer_pub || shared_secret)
 - If the attacker does not possess the correct PSK:
     - Authentication fails
     - The connection is terminated
@@ -123,7 +123,7 @@ sequenceDiagram
 
 ## 4. Technical Highlights
 - Concurrent Session Isolation: Both the Server and Attacker utilize a multi-threaded architecture. Each session maintains its own isolated cryptographic state (independent keys and AES contexts), ensuring no cross-contamination between concurrent client connections.
-- Centralized Inter-Thread Interception: The Attacker employs a producer-consumer pattern via queue.Queue. While cryptographic operations remain thread-local, intercepted messages are piped to a centralized Interactive Console Manager. This design effectively decouples high-speed network I/O from slow human-in-the-loop interactions without compromising session integrity.
+- Centralized Inter-Thread Interception: The Attacker employs a producer-consumer pattern via `queue.Queue`. While cryptographic operations remain thread-local, intercepted messages are piped to a centralized Interactive Console Manager. This design effectively decouples high-speed network I/O from slow human-in-the-loop interactions without compromising session integrity.
 - Thread-Safe Console Output: A global RLock is used to serialize all print and input operations across concurrent session threads. The Interactive Console Manager acquires the lock for the entire prompt-input cycle, preventing output interleaving and ensuring coherent console interaction during multi-session hijacking.
 
 ## 5. Lab Environment
