@@ -6,7 +6,6 @@ from crypto_utils import generate_keypair, compute_shared_secret, derive_aes_key
 from network_utils import recv_exact, recv_frame, send_frame
 
 server_host, server_port = "192.168.1.20", 50000
-
 mitm_host, mitm_port = "192.168.1.30", 50000
 
 true_PSK = b"my-super-secret-preshared-key!!"
@@ -226,5 +225,6 @@ if __name__ == "__main__":
     print(f"attacker: {mitm_host}:{mitm_port}")
     print(f"target server: {server_host}:{server_port}")
     main()
+
 
 
