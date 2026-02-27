@@ -20,9 +20,10 @@ sequenceDiagram
 
     Note over C,S: Step 1 — Generate Keypair
     par
-        C->>C: generate (client_priv, client_pub)
+        Note over C: generate (client_priv, client_pub)
     and
-        S->>S: generate (server_priv, server_pub)
+        Note over S: generate (server_priv, server_pub)
+    end
     end
 
     Note over C,S: Step 2 — Exchange Public Keys
