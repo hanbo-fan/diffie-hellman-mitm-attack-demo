@@ -1,10 +1,10 @@
 # Diffie-Hellman MITM Attack Demo (Python)
 - This project demonstrates a practical Man-in-the-Middle (MITM) attack on the Diffie-Hellman (DH) key exchange protocol using ARP spoofing in a 3-VM isolated lab environment.
 - The implementation includes 4 scenarios:
-    - 1. Normal DH key exchange
-    - 2. MITM attack without authentication
-    - 3. MITM prevented by PSK authentication
-    - 4. MITM successful with leaked PSK
+    - (1) Normal DH key exchange
+    - (2) MITM attack without authentication
+    - (3) MITM prevented by PSK authentication
+    - (4) MITM successful with leaked PSK
 
 ## Project Structure
 ```text
@@ -15,7 +15,7 @@
 │   ├── crypto_utils.py  # X25519, AES-GCM, HMAC, HKDF logic
 │   └── network_utils.py # Length-prefixed framing & socket helpers
 ├── README.md            # Documentation
-└── LICENSE              # Apache License 2.0
+└── LICENSE              # MIT License
 ```
 ## 1. Diffie-Hellman Key Exchange
 - This project implements an authenticated key exchange based on X25519 (Elliptic Curve Diffie-Hellman).
@@ -113,7 +113,7 @@ sequenceDiagram
 ## 3. PSK-based Authentication Defense
 - To mitigate MITM attacks, a Pre-Shared Key (PSK) is introduced.
 - The authentication tag is computed as:
-    - HMAC(key = PSK, role || salt || pub_self || pub_peer || shared_secret)
+    - HMAC(key = PSK, role || salt || my_pub || pub_peer || shared_secret)
 - If the attacker does not possess the correct PSK:
     - Authentication fails
     - The connection is terminated
@@ -121,7 +121,12 @@ sequenceDiagram
     - The attacker can successfully authenticate both sides
     - MITM becomes possible again
 
-## 4. Lab Environment
+## 4. Technical Highlights
+- Concurrent Session Isolation: Both the Server and Attacker utilize a multi-threaded architecture. Each session maintains its own isolated cryptographic state (independent keys and AES contexts), ensuring no cross-contamination between concurrent client connections.
+- Centralized Inter-Thread Interception: The Attacker employs a producer-consumer pattern via queue.Queue. While cryptographic operations remain thread-local, intercepted messages are piped to a centralized Interactive Console Manager. This design effectively decouples high-speed network I/O from slow human-in-the-loop interactions without compromising session integrity.
+- Thread-Safe Console Output: A global RLock is used to serialize all print and input operations across concurrent session threads. The Interactive Console Manager acquires the lock for the entire prompt-input cycle, preventing output interleaving and ensuring coherent console interaction during multi-session hijacking.
+
+## 5. Lab Environment
 - 3 Virtual Machines under "Internal Network" mode.
     - Client (192.168.1.10)
     - Server (192.168.1.20)
@@ -141,7 +146,7 @@ graph TD
     M -. "ARP spoofing<br/>poison Client's ARP table" .-> C
     M -. "ARP spoofing<br/>poison Server's ARP table" .-> S
 ```
-## 5. How to Run
+## 6. How to Run
 - Install dependencies: `pip install cryptography`
 - Execution Order: 
     - For Scenario 1, start `server.py` first, then client.py.
@@ -154,8 +159,10 @@ graph TD
     - Scenario 4: Enable PSK mode on all. When `attacker.py` prompts for true PSK access, choose 'y' (True PSK). The Attacker can now forge valid tags for both sides; MITM succeeds.
 
 
-## 6. Educational Purpose
-**This project is intended for educational and research purposes only.**
+## 7. Educational Purpose
+- This project is developed **strictly for educational and research purposes** to demonstrate cryptographic vulnerabilities and their respective mitigations
+    - Ethical Use: This tool should only be used in **isolated, authorized** lab environments for learning network security concepts.
+    - Disclaimer: The author is not responsible for any misuse of this software. Unauthorized interception or tampering of network traffic is illegal and violates professional codes of conduct.
 
-## 7. License
+## 8. License
 - MIT License
