@@ -12,17 +12,13 @@
     - shared = priv_A * pub_B = priv_B * pub_A
 - The shared secret is then processed through HKDF-SHA256 to derive a 256-bit AES symmetric key for authenticated encryption.
 - Optional PSK-based authentication is implemented using HMAC-SHA256 to bind the handshake parameters and prevent MITM attacks.
-
 ```mermaid
 sequenceDiagram
     participant C as Client
     participant S as Server
     Note over C,S: Step 1 — Generate Keypair
-    par
-        Note over C: generate (client_priv, client_pub)
-    and
-        Note over S: generate (server_priv, server_pub)
-    end
+    Note over C: generate (client_priv, client_pub)
+    Note over S: generate (server_priv, server_pub)
     Note over C,S: Step 2 — Exchange Public Keys
     S->>C: [connect (a)] server_pub
     C->>S: [connect (b)] client_pub
@@ -52,6 +48,54 @@ sequenceDiagram
         - Attacker ↔ Server
     - Transparently decrypt, modify, and re-encrypt messages
 - The attacker then acts as a transparent bidirectional TCP proxy, stripping the encryption of one session and re-encrypting it for the other.
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant M as Attacker (MITM)
+    participant S as Server
+
+    Note over C,S: Step 1 — Generate Keypair
+    Note over C: generate (client_priv, client_pub)
+    Note over M: generate (fake_for_client_priv, fake_for_client_pub)
+    Note over M: generate (fake_for_server_priv, fake_for_server_pub)
+    Note over S: generate (server_priv, server_pub)
+
+    Note over C,S: Step 2 — Intercept and Hijack Public Keys
+    S->>M: [connect (a)-server] server_pub
+    M->>C: [connect (a)-client] fake_for_client_pub
+    C->>M: [connect (b)-client] client_pub
+    M->>S: [connect (b)-server] fake_for_server_pub
+
+    Note over C,S: Step 3 — Compute Two Shared Secrets
+    Note over M: shared_client = fake_for_client_priv · client_pub
+    Note over M: shared_server = fake_for_server_priv · server_pub
+
+    Note over C,S: Step 4 — Salt Transmission
+    S->>M: [connect (c)-server] salt
+    M->>C: [connect (c)-client] salt
+
+    Note over C,S: Step 5 & 6 — PSK Authentication (optional)
+    S->>M: [connect (d)-server] server_tag
+    Note over M: ⚠ skip verification
+    M->>S: [connect (e)-server] fake_client_tag = HMAC(PSK, "CLIENT"||salt||fake_for_server_pub||server_pub||shared_server)
+    Note over S: verify fake_client_tag
+    M->>C: [connect (d)-client] fake_server_tag = HMAC(PSK, "SERVER"||salt||fake_for_client_pub||client_pub||shared_client)
+    Note over C: verify fake_server_tag
+    C->>M: [connect (e)-client] client_tag
+    Note over M: ⚠ skip verification
+
+    Note over C,S: Step 7 — Derive Two AES Keys
+    Note over M: key_client = HKDF(shared_client, salt)
+    Note over M: key_server = HKDF(shared_server, salt)
+
+    Note over C,S: Step 8 — Intercepted Encrypted Communication
+    C->>M: [connect (f)] nonce + AES-GCM(key_client, message)
+    Note over M: decrypt with key_client → plaintext → tamper → re-encrypt with key_server
+    M->>S: [connect (f)] nonce + AES-GCM(key_server, tampered_message)
+    S->>M: [connect (g)] nonce + AES-GCM(key_server, "ACK from server")
+    Note over M: decrypt with key_server → plaintext → tamper → re-encrypt with key_client
+    M->>C: [connect (g)] nonce + AES-GCM(key_client, tampered_ACK)
+```
 
 ## 3. PSK-based Authentication Defense
 - To mitigate MITM attacks, a Pre-Shared Key (PSK) is introduced.
