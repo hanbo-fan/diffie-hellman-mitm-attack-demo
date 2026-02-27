@@ -122,9 +122,9 @@ sequenceDiagram
     - MITM becomes possible again
 
 ## 4. Technical Highlights
-- Concurrent Session Isolation: Both the Server and Attacker utilize a multi-threaded architecture. Each session maintains its own isolated cryptographic state (independent keys and AES contexts), ensuring no cross-contamination between concurrent client connections.
-- Centralized Inter-Thread Interception: The Attacker employs a producer-consumer pattern via `queue.Queue`. While cryptographic operations remain thread-local, intercepted messages are piped to a centralized Interactive Console Manager. This design effectively decouples high-speed network I/O from slow human-in-the-loop interactions without compromising session integrity.
-- Thread-Safe Console Output: A global RLock is used to serialize all print and input operations across concurrent session threads. The Interactive Console Manager acquires the lock for the entire prompt-input cycle, preventing output interleaving and ensuring coherent console interaction during multi-session hijacking.
+- **Concurrent Session Isolation**: Both the Server and Attacker utilize a multi-threaded architecture. Each session maintains its own isolated cryptographic state (independent keys and AES contexts), ensuring no cross-contamination between concurrent client connections.
+- **Centralized Inter-Thread Interception**: The Attacker employs a producer-consumer pattern via `queue.Queue`. While cryptographic operations remain thread-local, intercepted messages are piped to a centralized Interactive Console Manager. This design effectively decouples high-speed network I/O from slow human-in-the-loop interactions without compromising session integrity.
+- **Thread-Safe Console Output**: A global RLock is used to serialize all print and input operations across concurrent session threads. The Interactive Console Manager acquires the lock for the entire prompt-input cycle, preventing output interleaving and ensuring coherent console interaction during multi-session hijacking.
 
 ## 5. Lab Environment
 - 3 Virtual Machines under "Internal Network" mode.
@@ -147,11 +147,11 @@ graph TD
     M -. "ARP spoofing<br/>poison Server's ARP table" .-> S
 ```
 ## 6. How to Run
-- Install dependencies: `pip install cryptography`
-- Execution Order: 
+- **Install dependencies**: `pip install cryptography`
+- **Execution Order**: 
     - For Scenario 1, start `server.py` first, then client.py.
     - For Scenarios 2–4, ensure `attacker.py` and `server.py` are running before launching `client.py` (the order between Attacker and Server does not matter).
-- Interactive Configuration:
+- **Interactive Configuration**:
     - Note on Protocol Synchronization: The PSK authentication toggle (y/n) must be identical across the Client, Server, and Attacker. If one party expects a PSK tag while another doesn't, the handshake state machine will desynchronize and fail.
     - Scenario 1: Toggle PSK mode (y/n) identically on both. Communication succeeds.
     - Scenario 2: Disable PSK mode on all. MITM succeeds via public key replacement.
@@ -161,8 +161,8 @@ graph TD
 
 ## 7. Educational Purpose
 - This project is developed **strictly for educational and research purposes** to demonstrate cryptographic vulnerabilities and their respective mitigations
-    - Ethical Use: This tool should only be used in **isolated, authorized** lab environments for learning network security concepts.
-    - Disclaimer: The author is not responsible for any misuse of this software. Unauthorized interception or tampering of network traffic is illegal and violates professional codes of conduct.
+    - **Ethical Use**: This tool should only be used in **isolated, authorized** lab environments for learning network security concepts.
+    - **Disclaimer**: The author is not responsible for any misuse of this software. Unauthorized interception or tampering of network traffic is illegal and violates professional codes of conduct.
 
 ## 8. License
 - MIT License
