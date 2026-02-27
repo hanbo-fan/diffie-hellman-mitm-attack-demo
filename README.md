@@ -67,8 +67,8 @@ sequenceDiagram
     M->>S: fake_for_server_pub
 
     Note over C,S: Step 3 — Compute Two Shared Secrets
-    Note over M: shared_client = <br/>fake_for_client_priv · client_pub
-    Note over M: shared_server = <br/>fake_for_server_priv · server_pub
+    Note over M: shared secret between attacker and client<br/> = fake_for_client_priv · client_pub
+    Note over M: shared secret between attacker and server<br/> = fake_for_server_priv · server_pub
 
     Note over C,S: Step 4 — Salt Transmission
     S->>M: salt
@@ -123,7 +123,7 @@ graph TD
         M["🖥 Attacker<br/>192.168.1.30"]
     end
 
-    C -- "TCP :50000<br/>(ARP spoofed → redirected <br/>to Attacker)" --> M
+    C -- "TCP :50000<br/>(ARP spoofed → redirected to Attacker)" --> M
     M -- "TCP :50000<br/>(forwarded to real Server)" --> S
     M -. "ARP spoofing<br/>poison Client's ARP table" .-> C
     M -. "ARP spoofing<br/>poison Server's ARP table" .-> S
