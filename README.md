@@ -1,10 +1,10 @@
 # Diffie-Hellman MITM Attack Demo (Python)
 - This project demonstrates a practical Man-in-the-Middle (MITM) attack on the Diffie-Hellman (DH) key exchange protocol using ARP spoofing in a 3-VM isolated lab environment.
 - The implementation includes 4 scenarios:
-    - Normal DH key exchange
-    - MITM attack without authentication
-    - MITM prevented by PSK authentication
-    - MITM successful with leaked PSK
+    - 1. Normal DH key exchange
+    - 2. MITM attack without authentication
+    - 3. MITM prevented by PSK authentication
+    - 4. MITM successful with leaked PSK
 
 ## Project Structure
 ```text
@@ -16,7 +16,7 @@
 │   └── network_utils.py # Length-prefixed framing & socket helpers
 ├── README.md            # Documentation
 └── LICENSE              # Apache License 2.0
-
+```
 ## 1. Diffie-Hellman Key Exchange
 - This project implements an authenticated key exchange based on X25519 (Elliptic Curve Diffie-Hellman).
 - During the handshake, both parties exchange public keys and compute a shared secret:
@@ -144,13 +144,15 @@ graph TD
 ## 5. How to Run
 - Install dependencies: `pip install cryptography`
 - Execution Order: 
-    - For Scenario 1, start `server.py` first.
+    - For Scenario 1, start `server.py` first, then client.py.
     - For Scenarios 2–4, ensure `attacker.py` and `server.py` are running before launching `client.py` (the order between Attacker and Server does not matter).
-- Scenario 3 (Defense): Attacker uses false PSK -> Authentication fails.
-- Scenario 4 (Leaked): Attacker uses true PSK -> MITM succeeds.
+- Interactive Configuration:
+    - Note on Protocol Synchronization: The PSK authentication toggle (y/n) must be identical across the Client, Server, and Attacker. If one party expects a PSK tag while another doesn't, the handshake state machine will desynchronize and fail.
+    - Scenario 1: Toggle PSK mode (y/n) identically on both. Communication succeeds.
+    - Scenario 2: Disable PSK mode on all. MITM succeeds via public key replacement.
+    - Scenario 3: Enable PSK mode on all. When `attacker.py` prompts for true PSK access, choose 'n' (False PSK). The Attacker cannot forge the tag; authentication fails at the endpoints.
+    - Scenario 4: Enable PSK mode on all. When `attacker.py` prompts for true PSK access, choose 'y' (True PSK). The Attacker can now forge valid tags for both sides; MITM succeeds.
 
-- Follow the prompts to enable/disable PSK authentication
-- Important: The PSK authentication setting must be consistent across all parties.
 
 ## 6. Educational Purpose
 **This project is intended for educational and research purposes only.**
