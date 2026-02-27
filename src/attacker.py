@@ -176,7 +176,7 @@ def main():
     print("=" * 50)
     print("Diffie-Hellman Key Exchange Demo (Attacker)")
     print("=" * 50)
-    choice = input("Enable PSK authentication? (y/n, default=n): ").lower()
+    choice = input("Enable PSK authentication mode? (y/n, default=n): ").lower()
     use_psk = 1 if (choice in ['y', 'yes']) else 0
     
     if use_psk:
@@ -226,3 +226,4 @@ if __name__ == "__main__":
     print(f"attacker: {mitm_host}:{mitm_port}")
     print(f"target server: {server_host}:{server_port}")
     main()
+
