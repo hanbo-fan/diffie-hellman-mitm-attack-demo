@@ -7,7 +7,7 @@ from network_utils import recv_exact, recv_frame, send_frame
 
 server_ip, server_port = "192.168.1.20", 50000
 
-PSK = b"my-super-secret-preshared-key-32bytes!!"
+PSK = b"my-super-secret-preshared-key!!"
 
 def main(host: str, port: int) -> None:
     print("=" * 50)
@@ -101,4 +101,5 @@ def main(host: str, port: int) -> None:
 
 if __name__ == "__main__":
     main(host = server_ip, port = server_port)
+
 
