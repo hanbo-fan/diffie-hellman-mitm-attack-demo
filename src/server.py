@@ -7,7 +7,7 @@ from network_utils import recv_exact, recv_frame, send_frame
 
 host, port = "192.168.1.20", 50000
 
-PSK = b"my-super-secret-preshared-key-32bytes!!"
+PSK = b"my-super-secret-preshared-key!!"
 use_psk = False
 
 def handle_client(conn, addr):
@@ -119,4 +119,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
