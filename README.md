@@ -62,9 +62,9 @@ sequenceDiagram
     
     Note over C,S: Step 2 — Intercept and Hijack Public Keys
     S->>M: server_pub
-    M->>C: fake_for_client_pub
+    M->>C: fake_for_client_pub<br/>(impersonate as server's public key)
     C->>M: client_pub
-    M->>S: fake_for_server_pub
+    M->>S: fake_for_server_pub<br/>(impersonate as client's public key)
 
     Note over C,S: Step 3 — Compute Two Shared Secrets
     Note over C: shared = client_priv · fake_for_client_pub
