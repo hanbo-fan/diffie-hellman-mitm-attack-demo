@@ -77,9 +77,9 @@ sequenceDiagram
     Note over C,S: Step 5 & 6 — PSK Authentication (optional)
     S->>M: server_tag
     Note over M: ⚠ skip verification
-    M->>S: fake_client_tag = HMAC(PSK, "CLIENT"||salt||fake_for_server_pub||server_pub||shared_server)
+    M->>S: fake_client_tag = HMAC(PSK, <br/>"CLIENT"||salt||fake_for_server_pub||server_pub||shared_server)
     Note over S: verify fake_client_tag
-    M->>C: fake_server_tag = HMAC(PSK, "SERVER"||salt||fake_for_client_pub||client_pub||shared_client)
+    M->>C: fake_server_tag = HMAC(PSK, <br/>"SERVER"||salt||fake_for_client_pub||client_pub||shared_client)
     Note over C: verify fake_server_tag
     C->>M: client_tag
     Note over M: ⚠ skip verification
@@ -115,7 +115,19 @@ sequenceDiagram
     - Attacker (192.168.1.30)
 - ARP spoofing for traffic interception
 - Isolated network for safety
+```mermaid
+graph TD
+    subgraph Internal Network 192.168.1.0/24
+        C["🖥 Client\n192.168.1.10"]
+        S["🖥 Server\n192.168.1.20"]
+        M["🖥 Attacker\n192.168.1.30"]
+    end
 
+    C -- "TCP :50000\n(ARP spoofed → redirected to Attacker)" --> M
+    M -- "TCP :50000\n(forwarded to real Server)" --> S
+    M -. "ARP spoofing\npoison Client & Server ARP table" .-> C
+    M -. "ARP spoofing\npoison Client & Server ARP table" .-> S
+```
 ## 5. How to Run
 - Install dependencies
     - pip install cryptography
