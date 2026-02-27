@@ -20,22 +20,22 @@ sequenceDiagram
     Note over C: generate (client_priv, client_pub)
     Note over S: generate (server_priv, server_pub)
     Note over C,S: Step 2 — Exchange Public Keys
-    S->>C: [connect (a)] server_pub
-    C->>S: [connect (b)] client_pub
+    S->>C: server_pub
+    C->>S: client_pub
     Note over C,S: Step 3 — Compute Shared Secret
     Note over C: shared = client_priv · server_pub
     Note over S: shared = server_priv · client_pub
     Note over C,S: Step 4 — Salt Transmission
-    S->>C: [connect (c)] salt (random 16 bytes)
+    S->>C: salt (random 16 bytes)
     Note over C,S: Step 5 & 6 — PSK Authentication (optional)
-    S->>C: [connect (d)] server_tag = HMAC(PSK, "SERVER"||salt||server_pub||client_pub||shared)
+    S->>C: server_tag = HMAC(PSK, "SERVER"||salt||server_pub||client_pub||shared)
     Note over C: verify server_tag
-    C->>S: [connect (e)] client_tag = HMAC(PSK, "CLIENT"||salt||client_pub||server_pub||shared)
+    C->>S: client_tag = HMAC(PSK, "CLIENT"||salt||client_pub||server_pub||shared)
     Note over S: verify client_tag
     Note over C,S: Step 7 — Derive AES Key: key = HKDF(shared, salt)
     Note over C,S: Step 8 — Encrypted Communication
-    C->>S: [connect (f)] nonce + AES-GCM(key, message)
-    S->>C: [connect (g)] nonce + AES-GCM(key, "ACK from server")
+    C->>S: nonce + AES-GCM(key, message)
+    S->>C: nonce + AES-GCM(key, "ACK from server")
 ```
 
 ## 2. MITM Attack
@@ -61,27 +61,27 @@ sequenceDiagram
     Note over S: generate (server_priv, server_pub)
 
     Note over C,S: Step 2 — Intercept and Hijack Public Keys
-    S->>M: [connect (a)-server] server_pub
-    M->>C: [connect (a)-client] fake_for_client_pub
-    C->>M: [connect (b)-client] client_pub
-    M->>S: [connect (b)-server] fake_for_server_pub
+    S->>M: server_pub
+    M->>C: fake_for_client_pub
+    C->>M: client_pub
+    M->>S: fake_for_server_pub
 
     Note over C,S: Step 3 — Compute Two Shared Secrets
     Note over M: shared_client = fake_for_client_priv · client_pub
     Note over M: shared_server = fake_for_server_priv · server_pub
 
     Note over C,S: Step 4 — Salt Transmission
-    S->>M: [connect (c)-server] salt
-    M->>C: [connect (c)-client] salt
+    S->>M: salt
+    M->>C: salt
 
     Note over C,S: Step 5 & 6 — PSK Authentication (optional)
-    S->>M: [connect (d)-server] server_tag
+    S->>M: server_tag
     Note over M: ⚠ skip verification
-    M->>S: [connect (e)-server] fake_client_tag = HMAC(PSK, "CLIENT"||salt||fake_for_server_pub||server_pub||shared_server)
+    M->>S: fake_client_tag = HMAC(PSK, "CLIENT"||salt||fake_for_server_pub||server_pub||shared_server)
     Note over S: verify fake_client_tag
-    M->>C: [connect (d)-client] fake_server_tag = HMAC(PSK, "SERVER"||salt||fake_for_client_pub||client_pub||shared_client)
+    M->>C: fake_server_tag = HMAC(PSK, "SERVER"||salt||fake_for_client_pub||client_pub||shared_client)
     Note over C: verify fake_server_tag
-    C->>M: [connect (e)-client] client_tag
+    C->>M: client_tag
     Note over M: ⚠ skip verification
 
     Note over C,S: Step 7 — Derive Two AES Keys
@@ -89,12 +89,12 @@ sequenceDiagram
     Note over M: key_server = HKDF(shared_server, salt)
 
     Note over C,S: Step 8 — Intercepted Encrypted Communication
-    C->>M: [connect (f)] nonce + AES-GCM(key_client, message)
+    C->>M: nonce + AES-GCM(key_client, message)
     Note over M: decrypt with key_client → plaintext → tamper → re-encrypt with key_server
-    M->>S: [connect (f)] nonce + AES-GCM(key_server, tampered_message)
-    S->>M: [connect (g)] nonce + AES-GCM(key_server, "ACK from server")
+    M->>S: nonce + AES-GCM(key_server, tampered_message)
+    S->>M: nonce + AES-GCM(key_server, "ACK from server")
     Note over M: decrypt with key_server → plaintext → tamper → re-encrypt with key_client
-    M->>C: [connect (g)] nonce + AES-GCM(key_client, tampered_ACK)
+    M->>C: nonce + AES-GCM(key_client, tampered_ACK)
 ```
 
 ## 3. PSK-based Authentication Defense
