@@ -15,7 +15,6 @@
 
 ```mermaid
 sequenceDiagram
-    sequenceDiagram
     participant C as Client
     participant S as Server
 
