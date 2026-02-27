@@ -13,7 +13,6 @@
 - The shared secret is then processed through HKDF-SHA256 to derive a 256-bit AES symmetric key for authenticated encryption.
 - Optional PSK-based authentication is implemented using HMAC-SHA256 to bind the handshake parameters and prevent MITM attacks.
 
-%%{init: {"theme": "default", "scale": 0.8}}%%
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -40,9 +39,7 @@ sequenceDiagram
     C->>S: [connect (e)] client_tag = HMAC(PSK, "CLIENT"||salt||client_pub||server_pub||shared)
     Note over S: verify client_tag
 
-    Note over C,S: Step 7 — Derive AES Key
-    Note over C: key = HKDF(shared, salt)
-    Note over S: key = HKDF(shared, salt)
+    Note over C,S: Step 7 — Derive AES Key: key = HKDF(shared, salt)
 
     Note over C,S: Step 8 — Encrypted Communication
     C->>S: [connect (f)] nonce + AES-GCM(key, message)
