@@ -13,42 +13,32 @@
 - The shared secret is then processed through HKDF-SHA256 to derive a 256-bit AES symmetric key for authenticated encryption.
 - Optional PSK-based authentication is implemented using HMAC-SHA256 to bind the handshake parameters and prevent MITM attacks.
 
-```mermaid
 sequenceDiagram
     participant C as Client
     participant S as Server
-
     Note over C,S: Step 1 — Generate Keypair
     par
         Note over C: generate (client_priv, client_pub)
     and
         Note over S: generate (server_priv, server_pub)
     end
-    end
-
     Note over C,S: Step 2 — Exchange Public Keys
     S->>C: [connect (a)] server_pub
     C->>S: [connect (b)] client_pub
-
     Note over C,S: Step 3 — Compute Shared Secret
     Note over C: shared = client_priv · server_pub
     Note over S: shared = server_priv · client_pub
-
     Note over C,S: Step 4 — Salt Transmission
     S->>C: [connect (c)] salt (random 16 bytes)
-
     Note over C,S: Step 5 & 6 — PSK Authentication (optional)
     S->>C: [connect (d)] server_tag = HMAC(PSK, "SERVER"||salt||server_pub||client_pub||shared)
     Note over C: verify server_tag
     C->>S: [connect (e)] client_tag = HMAC(PSK, "CLIENT"||salt||client_pub||server_pub||shared)
     Note over S: verify client_tag
-
     Note over C,S: Step 7 — Derive AES Key: key = HKDF(shared, salt)
-
     Note over C,S: Step 8 — Encrypted Communication
     C->>S: [connect (f)] nonce + AES-GCM(key, message)
     S->>C: [connect (g)] nonce + AES-GCM(key, "ACK from server")
-```
 
 ## 2. MITM Attack
 - Diffie-Hellman alone does not provide authentication.
