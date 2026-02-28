@@ -91,7 +91,7 @@ sequenceDiagram
         - Attacker ↔ Server
     - Transparently decrypt, modify, and re-encrypt messages
 - The attacker then acts as a transparent bidirectional TCP proxy, stripping the encryption of one session and re-encrypting it for the other.
-  ![attacker tampering with bidirectional messages](image/attacker_tampering.png)
+![attacker tampering with bidirectional messages](image/attacker_tampering.png)
 ```mermaid
 sequenceDiagram
     participant C as Client
