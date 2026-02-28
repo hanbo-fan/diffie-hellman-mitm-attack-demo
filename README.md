@@ -127,6 +127,7 @@ sequenceDiagram
 - If the attacker does not possess the correct PSK:
     - Authentication fails
     - The connection is terminated
+
 ![attacker tampering with bidirectional messages](image/client-auth-failed.png)
 ![attacker tampering with bidirectional messages](image/server-auth-failed.png)
 - If the PSK is leaked:
