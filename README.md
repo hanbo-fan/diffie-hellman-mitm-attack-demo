@@ -55,8 +55,8 @@ sequenceDiagram
 - Since ARP does not provide authentication, any host can send forged ARP replies.
 - The attacker exploits this weakness by sending unsolicited ARP replies, causing the victim to associate the server's IP address with the attacker's MAC address.
 - As a result, traffic intended for the server is redirected to the attacker.
-![attacker poisoning client's arp table](images/attacker-arpspoof-client.png)
-![client's arp table is changed, server's IP is mapped to attacker's MAC address](images/client-arp-poisoned.png)
+![attacker poisoning client's arp table](image/attacker-arpspoof-client.png)
+![client's arp table is changed, server's IP is mapped to attacker's MAC address](image/client-arp-poisoned.png)
 
 **2.2 Active MITM on DH Handshake**
 - Diffie-Hellman alone does not provide authentication.
@@ -68,7 +68,7 @@ sequenceDiagram
         - Attacker ↔ Server
     - Transparently decrypt, modify, and re-encrypt messages
 - The attacker then acts as a transparent bidirectional TCP proxy, stripping the encryption of one session and re-encrypting it for the other.
-  ![attacker tampering with bidirectional messages](images/attacker_tampering.png)
+  ![attacker tampering with bidirectional messages](image/attacker_tampering.png)
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -127,8 +127,8 @@ sequenceDiagram
 - If the attacker does not possess the correct PSK:
     - Authentication fails
     - The connection is terminated
-![attacker tampering with bidirectional messages](images/client-auth-failed.png)
-![attacker tampering with bidirectional messages](images/server-auth-failed.png)
+![attacker tampering with bidirectional messages](image/client-auth-failed.png)
+![attacker tampering with bidirectional messages](image/server-auth-failed.png)
 - If the PSK is leaked:
     - The attacker can successfully authenticate both sides
     - MITM becomes possible again
