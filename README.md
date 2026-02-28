@@ -1,13 +1,18 @@
 # Diffie-Hellman Security Evaluation & Mitigation (Python)
-## 📖 Project Overview
+
+---
+
+## Project Overview
 - This project demonstrates a practical Man-in-the-Middle (MITM) attack on the Diffie-Hellman (DH) key exchange protocol using ARP spoofing in a 3-VM isolated lab environment.
 - The implementation includes 4 scenarios:
     - (1) Normal DH key exchange
     - (2) MITM attack without authentication
     - (3) MITM prevented by PSK authentication
     - (4) MITM successful with leaked PSK
+ 
+---
 
-## 🎥 Executive Demo (2m46s)
+## Executive Demo (2m46s)
 
 [![Watch Demo](image/demo-cover.png)](https://youtu.be/oz47gJUolfw)
 
@@ -21,7 +26,9 @@ Active MITM attack on unauthenticated Diffie-Hellman, with PSK-based authenticat
 01:21 MITM success with leaked PSK  
 01:52 Multi-client concurrency demo  
 
-## 🗂️ Project Structure
+---
+
+## Project Structure
 ```text
 ├── src/
 │   ├── client.py        # ECDH Client logic (initiator)
@@ -39,6 +46,10 @@ Active MITM attack on unauthenticated Diffie-Hellman, with PSK-based authenticat
 ├── README.md            # Documentation
 └── LICENSE              # MIT License
 ```
+
+---
+
+
 ## 1. Diffie-Hellman Key Exchange
 - This project implements an authenticated key exchange based on X25519 (Elliptic Curve Diffie-Hellman).
 - During the handshake, both parties exchange public keys and compute a shared secret:
@@ -71,8 +82,10 @@ sequenceDiagram
     S->>C: nonce + AES-GCM(key, "ACK from server")
 ```
 
+---
+
 ## 2. MITM Attack
-**2.1 ARP Cache Poisoning (Traffic Interception)**
+### 2.1 ARP Cache Poisoning (Traffic Interception)**
 - ARP (Address Resolution Protocol) is used to map IP addresses to MAC addresses within a LAN.
 - Since ARP does not provide authentication, any host can send forged ARP replies.
 - The attacker exploits this weakness by sending unsolicited ARP replies, causing the victim to associate the server's IP address with the attacker's MAC address.
@@ -83,7 +96,7 @@ sequenceDiagram
 
 (Attacker MAC: 08:00:27:1d:69:25)
 
-**2.2 Active MITM on DH Handshake**
+### 2.2 Active MITM on DH Handshake**
 - Diffie-Hellman alone does not provide authentication.
 - The attacker can:
     - Perform ARP spoofing to intercept traffic
@@ -145,6 +158,8 @@ sequenceDiagram
     M->>C: nonce + AES-GCM(key_client, tampered_ACK)
 ```
 
+---
+
 ## 3. PSK-based Authentication Defense
 - To mitigate MITM attacks, a Pre-Shared Key (PSK) is introduced.
 - The authentication tag is computed as:
@@ -159,10 +174,14 @@ sequenceDiagram
     - The attacker can successfully authenticate both sides
     - MITM becomes possible again
 
+---
+
 ## 4. Technical Highlights
 - **Concurrent Session Isolation**: Both the Server and Attacker utilize a multi-threaded architecture. Each session maintains its own isolated cryptographic state (independent keys and AES contexts), ensuring no cross-contamination between concurrent client connections.
 - **Centralized Inter-Thread Interception**: The Attacker employs a producer-consumer pattern via `queue.Queue`. While cryptographic operations remain thread-local, intercepted messages are piped to a centralized Interactive Console Manager. This design effectively decouples high-speed network I/O from slow human-in-the-loop interactions without compromising session integrity.
 - **Thread-Safe Console Output**: A global RLock is used to serialize all print and input operations across concurrent session threads. The Interactive Console Manager acquires the lock for the entire prompt-input cycle, preventing output interleaving and ensuring coherent console interaction during multi-session hijacking.
+
+---
 
 ## 5. Lab Environment
 - 3 Virtual Machines under "Internal Network" mode.
@@ -184,6 +203,9 @@ graph TD
     M -. "ARP spoofing<br/>poison Client's ARP table" .-> C
     M -. "ARP spoofing<br/>poison Server's ARP table" .-> S
 ```
+
+---
+
 ## 6. How to Run
 - **Install dependencies**: `pip install cryptography`
 - **Execution Order**: 
@@ -196,10 +218,14 @@ graph TD
     - Scenario 3: Enable PSK mode on all. When `attacker.py` prompts for true PSK access, choose 'n' (False PSK). The Attacker cannot forge the tag; authentication fails at the endpoints.
     - Scenario 4: Enable PSK mode on all. When `attacker.py` prompts for true PSK access, choose 'y' (True PSK). The Attacker can now forge valid tags for both sides; MITM succeeds.
 
+---
+
 ## 7. Educational Purpose
 - This project is developed **strictly for educational and research purposes** to demonstrate cryptographic vulnerabilities and their respective mitigations
     - **Ethical Use**: This tool should only be used in **isolated, authorized** lab environments for learning network security concepts.
     - **Disclaimer**: The author is not responsible for any misuse of this software. Unauthorized interception or tampering of network traffic is illegal and violates professional codes of conduct.
+
+---
 
 ## 8. License
 - MIT License
