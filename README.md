@@ -9,6 +9,7 @@
 ## 🎥 Executive Demo (2m46s)
 
 [![Watch Demo](image/demo-cover.png)](https://youtu.be/oz47gJUolfw)
+
 Active MITM attack on unauthenticated Diffie-Hellman, with PSK-based authentication mitigation and concurrency handling.
 
 ### Timeline
