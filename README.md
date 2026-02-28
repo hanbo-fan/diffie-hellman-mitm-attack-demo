@@ -1,4 +1,4 @@
-# Diffie-Hellman MITM Attack Demo (Python)
+# Diffie-Hellman Security Evaluation & Mitigation (Python)
 - This project demonstrates a practical Man-in-the-Middle (MITM) attack on the Diffie-Hellman (DH) key exchange protocol using ARP spoofing in a 3-VM isolated lab environment.
 - The implementation includes 4 scenarios:
     - (1) Normal DH key exchange
