@@ -6,6 +6,19 @@
     - (3) MITM prevented by PSK authentication
     - (4) MITM successful with leaked PSK
 
+## 🎥 Executive Demo (2m45s)
+
+[Watch here](demo/dh-mitm-attack-demo.mp4)
+
+### Timeline
+
+00:00 Normal DH key exchange  
+00:12 ARP cache poisoning  
+00:28 Active MITM without authentication  
+01:02 PSK authentication prevents MITM  
+01:21 MITM success with leaked PSK  
+01:52 Multi-client concurrency demo  
+
 ## Project Structure
 ```text
 ├── src/
@@ -20,6 +33,8 @@
 │   ├── client-arp-poisoned.png
 │   ├── client-auth-failed.png
 │   ├── server-auth-failed.png
+├── demo/
+│   ├── dh-mitm-attack-demo.mp4
 ├── README.md            # Documentation
 └── LICENSE              # MIT License
 ```
@@ -61,6 +76,7 @@ sequenceDiagram
 - Since ARP does not provide authentication, any host can send forged ARP replies.
 - The attacker exploits this weakness by sending unsolicited ARP replies, causing the victim to associate the server's IP address with the attacker's MAC address.
 - As a result, traffic intended for the server is redirected to the attacker.
+
 ![attacker poisoning client's arp table](image/attacker-arpspoof-client.png)
 ![client's arp table is changed, server's IP is mapped to attacker's MAC address](image/client-arp-poisoned.png)
 (Attacker MAC: 08:00:27:1d:69:25)
