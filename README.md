@@ -21,7 +21,7 @@ Active MITM attack on unauthenticated Diffie-Hellman, with PSK-based authenticat
 01:21 MITM success with leaked PSK  
 01:52 Multi-client concurrency demo  
 
-## Project Structure
+## 🗂️ Project Structure
 ```text
 ├── src/
 │   ├── client.py        # ECDH Client logic (initiator)
