@@ -8,7 +8,7 @@
 
 ## 🎥 Executive Demo (2m46s)
 
-[![Watch Demo]](https://youtu.be/oz47gJUolfw)
+[![Watch Demo](image/demo-cover.png)](https://youtu.be/oz47gJUolfw)
 
 ### Timeline
 
@@ -32,7 +32,8 @@
 │   ├── attacker_tampering.png
 │   ├── client-arp-poisoned.png
 │   ├── client-auth-failed.png
-│   └── server-auth-failed.png
+│   ├── server-auth-failed.png
+│   └── demo-cover.png
 ├── README.md            # Documentation
 └── LICENSE              # MIT License
 ```
