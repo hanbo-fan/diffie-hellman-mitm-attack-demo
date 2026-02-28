@@ -9,9 +9,9 @@
 ## 🎥 Executive Demo (2m46s)
 
 [![Watch Demo](image/demo-cover.png)](https://youtu.be/oz47gJUolfw)
+Active MITM attack on unauthenticated Diffie-Hellman, with PSK-based authentication mitigation and concurrency handling.
 
 ### Timeline
-
 00:00 Normal DH key exchange  
 00:12 ARP cache poisoning  
 00:28 Active MITM without authentication  
