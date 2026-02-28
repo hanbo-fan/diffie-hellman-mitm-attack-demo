@@ -79,6 +79,7 @@ sequenceDiagram
 
 ![attacker poisoning client's arp table](image/attacker-arpspoof-client.png)
 ![client's arp table is changed, server's IP is mapped to attacker's MAC address](image/client-arp-poisoned.png)
+
 (Attacker MAC: 08:00:27:1d:69:25)
 
 **2.2 Active MITM on DH Handshake**
