@@ -14,6 +14,12 @@
 │   ├── attacker.py      # MITM Proxy & Interactive Console
 │   ├── crypto_utils.py  # X25519, AES-GCM, HMAC, HKDF logic
 │   └── network_utils.py # Length-prefixed framing & socket helpers
+├── image/
+│   ├── attacker-arpspoof-client.png
+│   ├── attacker_tampering.png
+│   ├── client-arp-poisoned.png
+│   ├── client-auth-failed.png
+│   ├── server-auth-failed.png
 ├── README.md            # Documentation
 └── LICENSE              # MIT License
 ```
@@ -57,6 +63,7 @@ sequenceDiagram
 - As a result, traffic intended for the server is redirected to the attacker.
 ![attacker poisoning client's arp table](image/attacker-arpspoof-client.png)
 ![client's arp table is changed, server's IP is mapped to attacker's MAC address](image/client-arp-poisoned.png)
+(Attacker MAC: 08:00:27:1d:69:25)
 
 **2.2 Active MITM on DH Handshake**
 - Diffie-Hellman alone does not provide authentication.
