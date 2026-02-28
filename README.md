@@ -6,9 +6,9 @@
     - (3) MITM prevented by PSK authentication
     - (4) MITM successful with leaked PSK
 
-## 🎥 Executive Demo (2m45s)
+## 🎥 Executive Demo (2m46s)
 
-[Watch here](demo/dh-mitm-attack-demo.mp4)
+[![Watch Demo](images/demo-cover.png)](https://youtu.be/oz47gJUolfw)
 
 ### Timeline
 
@@ -32,9 +32,7 @@
 │   ├── attacker_tampering.png
 │   ├── client-arp-poisoned.png
 │   ├── client-auth-failed.png
-│   ├── server-auth-failed.png
-├── demo/
-│   ├── dh-mitm-attack-demo.mp4
+│   └── server-auth-failed.png
 ├── README.md            # Documentation
 └── LICENSE              # MIT License
 ```
