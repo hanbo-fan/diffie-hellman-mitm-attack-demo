@@ -8,7 +8,7 @@
 
 ## 🎥 Executive Demo (2m46s)
 
-[![Watch Demo](images/demo-cover.png)](https://youtu.be/oz47gJUolfw)
+[![Watch Demo]](https://youtu.be/oz47gJUolfw)
 
 ### Timeline
 
